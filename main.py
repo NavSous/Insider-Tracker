@@ -202,6 +202,7 @@ class InsiderTracker:
         - transaction_types: list of transaction types
         - min_market_cap_percent: minimum percentage of market cap
         - tickers: list of specific tickers to include
+        - relationship: list of specific relationships to include
         """
         df = self._cached_data
         if df is None:
@@ -217,9 +218,13 @@ class InsiderTracker:
         if 'max_days' in filters:
             cutoff_date = datetime.now() - timedelta(days=filters['max_days'])
             df = df[df['Date'] > cutoff_date]
-            
+        
+        # Transaction types: Buy, Sale, Option Exercise, Proposed Sale, 
         if 'transaction_types' in filters:
             df = df[df['Transaction'].isin(filters['transaction_types'])]
+
+        if 'relationship' in filters:
+            df = df[df['Relationship'].apply(lambda x: any(rel in str(x) for rel in filters['relationship']))]
             
         if 'min_market_cap_percent' in filters and self.av_api_key:
             df = df[df['Trade % of Market Cap'] >= filters['min_market_cap_percent']]
@@ -253,9 +258,8 @@ def main():
     
     # Get recent large purchases
     filters = {
-        # Transaction types: Buy, Sale, Option Exercise, Proposed Sale, 
-        'transaction_types': ['Buy'],
-        'min_value': 1000000,  # $1M minimum
+        'transaction_types': ['Sale'],
+        'relationship': ['Chief Executive Officer', 'CEO'],
         'max_days': 10  # Last day
     }
     large_purchases = tracker.filter_trades(filters)
