@@ -56,7 +56,7 @@ Number of significant trades (>$100k): 45
 
 Top 5 largest trades:
    Ticker    Owner           Relationship    Date        Transaction    Value ($)
-1  AAPL     John Doe        Director        2023-05-15  Sale          2,500,000
-2  MSFT     Jane Smith      CEO             2023-05-15  Buy           1,800,000
+1  AAPL     John Doe        Director        2023-05-15  Sale          2500000.0
+2  MSFT     Jane Smith      CEO             2023-05-15  Buy           1800000.0
 ...
 ```
